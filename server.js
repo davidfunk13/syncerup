@@ -1,32 +1,19 @@
 const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
+
 const app = express();
-const http = require('http');
 
-app.use(express.json());
+const http = require('http').createServer(app);
 
-app.use(cors());
+const io = require('socket.io')(http);
 
 const PORT = process.env.PORT || 3001;
 
-const server = http.createServer();
+app.use(express.json());
 
-const WebSocket = require('ws').Server;
-
-const wss = new WebSocket({ server: server });
-
-const sessions = [];
-
-server.on('request', app);
-
-server.listen(PORT, () => {
-    console.log(`Application server listening on port ${PORT}`);
+io.on('connection', socket => {
+    socket.emit('message', "connected")
 });
 
-wss.on('connection', (ws) => {
-    ws.on('message', (message) => {
-        const parsed = JSON.parse(message);
-        console.log(parsed);
-    })
-})
+http.listen(PORT, () => {
+    console.log(`Application server listening on port ${PORT}`);
+});
