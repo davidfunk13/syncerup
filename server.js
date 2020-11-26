@@ -10,7 +10,7 @@ const io = require('socket.io')(server);
 
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({ origin: [`http://localhost:${PORT}`], optionsSuccessStatus: 200, }));
 
 app.use(express.json());
 
