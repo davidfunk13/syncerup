@@ -2,9 +2,9 @@ const express = require('express');
 
 const app = express();
 
-const http = require('http').createServer(app);
+const server = require('http').createServer(app);
 
-const io = require('socket.io')(http);
+const io = require('socket.io')(server);
 
 const PORT = process.env.PORT || 3001;
 
@@ -14,6 +14,12 @@ io.on('connection', socket => {
     socket.emit('message', "connected")
 });
 
-http.listen(PORT, () => {
+
+
+server.listen(PORT, () => {
     console.log(`Application server listening on port ${PORT}`);
 });
+
+app.get('/api/testing', function (req, res) {
+    res.json({ success: true, data: "api works via ghpages" })
+})
