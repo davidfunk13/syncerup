@@ -9,7 +9,7 @@ const cors = require('cors');
 const io = require('socket.io')(server);
 
 const PORT = process.env.PORT || 3001;
-const corsOptions = { origin: [`https://davidfunk13.github.io/`], optionsSuccessStatus: 200, };
+const corsOptions = { origin: `https://davidfunk13.github.io/`, optionsSuccessStatus: 200, };
 app.use(cors(corsOptions));
 
 app.use(express.json());
