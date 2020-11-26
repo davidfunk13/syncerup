@@ -23,5 +23,5 @@ server.listen(PORT, () => {
 });
 
 app.get('/api/testing', function (req, res) {
-    res.json({ success: true, data: "api works via ghpages" })
+    res.json({ success: true, data: "api works via ghpages with cors" })
 })
