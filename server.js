@@ -9,8 +9,10 @@ const cors = require('cors');
 const io = require('socket.io')(server);
 
 const PORT = process.env.PORT || 3001;
-const corsOptions = { origin: [`https://davidfunk13.github.io/`, `http://localhost:${PORT}`], optionsSuccessStatus: 200, };
-app.use(cors(corsOptions));
+if (process.env.NODE_ENV === 'production') {
+    const corsOptions = { origin: `https://davidfunk13.github.io/`, optionsSuccessStatus: 200, };
+    app.use(cors(corsOptions));
+}
 
 app.use(express.json());
 
