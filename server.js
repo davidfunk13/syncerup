@@ -1,15 +1,20 @@
-const app = require('express')();
+const express = require('express');
+
+const app = express();
 
 const server = require('http').createServer(app);
 
 const PORT = process.env.PORT | 3001;
 
+const cors = require('cors');
+
 const corsOptions = {
-    origin: [`https://davidfunk13.github.io/`, `http://localhost:3001`],
+    origin: [`https://davidfunk13.github.io/`, `http://localhost:3001`, `http://localhost:3000`],
     optionsSuccessStatus: 200,
 };
 
-app.use(require('express').json());
+app.use(cors(corsOptions));
+app.use(express.json());
 
 const options = {
     cors: {
@@ -33,10 +38,6 @@ io.on('connection', socket => {
     })
 });
 
-server.listen(PORT, function () {
+server.listen(PORT, () => {
     console.log('Server listening on port ' + PORT)
 });
-
-app.get('/*', (req, res) => {
-    res.send({ message: 'api is live.' })
-})
