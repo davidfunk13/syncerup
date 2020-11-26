@@ -1,26 +1,34 @@
-const express = require('express');
 
-const app = express();
+
+
+const app = require('express')();
 
 const server = require('http').createServer(app);
 
-const cors = require('cors');
+const PORT = process.env.PORT | 3001;
 
-const io = require('socket.io')(server);
+const options = {
+    cors: {
+        origin: '*'
+    }
+};
 
-const PORT = process.env.PORT || 3001;
+const io = require('socket.io')(server, options);
 
-corsOptions = { origin: [`https://davidfunk13.github.io/`, `http://localhost:3000`], optionsSuccessStatus: 200, };
-
-app.use(cors(corsOptions));
-
-
-app.use(express.json());
+function recieveMessage (socket, message) {
+    socket.emit('notification', { message: 'message recieved', data: message })
+}
 
 io.on('connection', socket => {
-    socket.emit('message', "connected")
+    socket.emit('notification', { message: 'connected' });
+
+    socket.on('message', data => recieveMessage(socket, data));
+
+    socket.on('disconnect', () => {
+        console.log('disconnected', socket.id);
+    })
 });
 
-server.listen(PORT, () => {
-    console.log(`Application server listening on port ${PORT}`);
+server.listen(PORT, function () {
+    console.log('Server listening on port ' + PORT)
 });
