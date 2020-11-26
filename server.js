@@ -9,7 +9,7 @@ const corsOptions = {
     optionsSuccessStatus: 200,
 };
 
-app.use(express.json());
+app.use(require('express').json());
 
 const options = {
     cors: {
