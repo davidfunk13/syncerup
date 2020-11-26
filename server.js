@@ -8,12 +8,8 @@ const PORT = process.env.PORT | 3001;
 
 const cors = require('cors');
 
-const corsOptions = {
-    origin: [`https://davidfunk13.github.io/`, `http://localhost:3001`, `http://localhost:3000`],
-    optionsSuccessStatus: 200,
-};
+app.use(cors());
 
-app.use(cors(corsOptions));
 app.use(express.json());
 
 const options = {
