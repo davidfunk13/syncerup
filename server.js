@@ -10,7 +10,7 @@ const io = require('socket.io')(server);
 
 const PORT = process.env.PORT || 3001;
 
-corsOptions = { origin: [`https://davidfunk13.github.io/`, `http://localhost:3001`], optionsSuccessStatus: 200, };
+corsOptions = { origin: [`https://davidfunk13.github.io/`, `http://localhost:3000`], optionsSuccessStatus: 200, };
 
 app.use(cors(corsOptions));
 
