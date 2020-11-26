@@ -9,7 +9,7 @@ const cors = require('cors');
 const io = require('socket.io')(server);
 
 const PORT = process.env.PORT || 3001;
-const corsOptions = { origin: [`http://localhost:${PORT}`], optionsSuccessStatus: 200, };
+const corsOptions = { origin: [`https://davidfunk13.github.io/`], optionsSuccessStatus: 200, };
 app.use(cors(corsOptions));
 
 app.use(express.json());
@@ -23,5 +23,5 @@ server.listen(PORT, () => {
 });
 
 app.get('/api/testing', cors(corsOptions), function (req, res) {
-    res.json({ success: true, data: "api works via ghpages with cors" })
+    res.json({ success: true, data: "cors test" })
 })
