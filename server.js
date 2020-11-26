@@ -42,6 +42,6 @@ server.listen(PORT, function () {
     console.log('Server listening on port ' + PORT)
 });
 
-app.get('/', (req, res) => {
+app.get('/*', (req, res) => {
     res.send({ message: 'api is live.' })
 })
