@@ -1,8 +1,4 @@
-const express = require('express');
-
-const app = express();
-
-const cors = require('cors');
+const app = require('express')();
 
 const server = require('http').createServer(app);
 
@@ -13,7 +9,6 @@ const corsOptions = {
     optionsSuccessStatus: 200,
 };
 
-app.use(cors(corsOptions));
 app.use(express.json());
 
 const options = {
