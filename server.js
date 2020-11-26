@@ -19,6 +19,10 @@ function recieveMessage (socket, message) {
     socket.emit('notification', { message: 'message recieved', data: message })
 }
 
+server.listen(PORT, function () {
+    console.log('Server listening on port ' + PORT)
+});
+
 io.on('connection', socket => {
     socket.emit('notification', { message: 'connected' });
 
@@ -29,6 +33,3 @@ io.on('connection', socket => {
     })
 });
 
-server.listen(PORT, function () {
-    console.log('Server listening on port ' + PORT)
-});
