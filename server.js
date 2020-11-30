@@ -19,7 +19,7 @@ const options = {
 
 const io = require('socket.io')(server, options);
 
-function recieveMessage (socket, message) {
+function recieveMessage(socket, message) {
     socket.emit('notification', { message: 'message recieved', data: message })
 }
 
@@ -27,6 +27,12 @@ io.on('connection', socket => {
     socket.emit('notification', { message: 'connected' });
 
     socket.on('message', data => recieveMessage(socket, data));
+
+    // socket.on('joinRoom', ({ username, room }, () => console.log('fart')))
+    socket.on('joinRoom', ({ username, room }, callback) => {
+        recieveMessage(socket, { username, room });
+        // callback();
+    })
 
     socket.on('disconnect', () => {
         console.log('disconnected', socket.id);
