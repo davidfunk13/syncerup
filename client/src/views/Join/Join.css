@@ -1,0 +1,32 @@
+.join-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.join-container > h1 {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: left;
+}
+
+input, label {
+    display: block;
+    margin: 0 5% 2% 5%;
+    width: 100%
+}
+
+input:not(.submit-button) {
+    height: 1.75rem;
+}
+
+.submit-button {
+    height: 2rem;
+    margin-top: 5%;
+}

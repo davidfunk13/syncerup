@@ -15,7 +15,6 @@ const options = {
 const io = require('socket.io')(server, options);
 
 function recieveMessage(socket, message) {
-    console.log(socket, message)
     socket.emit('notification', { message: 'message recieved', data: message })
 }
 
