@@ -1,2 +1,2 @@
-# watch-party-api
-NodeJS api for watch-party app.
+# Syncerup
+Watch videos together and chat
