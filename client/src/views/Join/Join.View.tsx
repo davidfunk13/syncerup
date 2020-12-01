@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import IJoinProps from './Join.Types';
 import { useHistory } from 'react-router-dom';
 
@@ -7,6 +7,7 @@ import './Join.css';
 const Join = ({ }: IJoinProps) => {
     const [username, setUsername] = useState<string>('');
     const [room, setRoom] = useState<string>('');
+
     const history = useHistory();
 
     function submitJoinForm(event: any): void {

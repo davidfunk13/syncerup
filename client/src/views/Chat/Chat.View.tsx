@@ -4,10 +4,10 @@ import io, { Socket } from 'socket.io-client';
 import { joinRoom } from '../../utils/userFunctions';
 import { useHistory } from 'react-router-dom';
 import { User } from '../../App.Types';
-import { connectionString } from '../../utils/connectionString';
+// import { connectionString } from '../../utils/connectionString';
 import checkLocalStorage from '../../utils/checkUserStorage';
 
-const socket = io(connectionString);
+const socket = io();
 
 const initialUserState: User = { username: undefined, room: undefined };
 
