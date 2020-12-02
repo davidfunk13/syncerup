@@ -23,29 +23,29 @@ const Chat = ({ }: IChatProps) => {
     }
 
     useEffect(() => {
-        socket.on('notification', (notification: any) => console.log({ notification }));
+        console.log('mount');
+
+        socket.on('notification', (notification: any) => console.log(notification));
 
         const userStorage: User = checkLocalStorage('user');
 
-        if (!userStorage) {
-            return history.push('/');
+        if (userStorage) {
+            if (userStorage.username && userStorage.room) {
+                return joinRoom(socket, userStorage)
+            }
+
+            return setUser(userStorage);
         }
-
-        setUser(userStorage);
-
-        if (userStorage.username && userStorage.room) {
-            return joinRoom(socket, userStorage)
-        }
-
-        console.error('either user or room is blank');
 
         history.push('/');
 
-        //cleanup
+
         return () => {
+            console.log('unmount');
             setUser(initialUserState);
             socket.off('notification');
-        }
+        };
+
     }, []);
 
     return (
