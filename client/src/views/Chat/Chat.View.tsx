@@ -23,7 +23,7 @@ const Chat = ({ }: IChatProps) => {
     }
 
     useEffect(() => {
-        socket.on('notification', (notification: any) => console.log(notification));
+        socket.on('notification', (notification: any) => console.log({ notification }));
 
         const userStorage: User = checkLocalStorage('user');
 

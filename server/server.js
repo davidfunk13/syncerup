@@ -2,6 +2,8 @@ const app = require('express')();
 
 const server = require('http').createServer(app);
 
+const path = require('path');
+
 const PORT = process.env.PORT || 3001;
 
 app.use(require('express').json());
