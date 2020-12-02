@@ -31,17 +31,17 @@ const Chat = ({ }: IChatProps) => {
 
         if (userStorage) {
             if (userStorage.username && userStorage.room) {
+                setUser(userStorage);
                 return joinRoom(socket, userStorage)
             }
 
-            return setUser(userStorage);
         }
 
         history.push('/');
 
-
         return () => {
             console.log('unmount');
+
             setUser(initialUserState);
             socket.off('notification');
         };
@@ -56,7 +56,11 @@ const Chat = ({ }: IChatProps) => {
                 <p>Username: {user.username}</p>
                 <p>Room: {user.room}</p>
             </div>
-            {/* {user ? <ChatBox /> : <p>Loading...</p>} */}
+            {/* {user ?
+                 <ChatBox /> 
+                 :
+                  <p>Loading...</p>
+                  } */}
         </div>
     );
 };
