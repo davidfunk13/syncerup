@@ -4,7 +4,7 @@ const server = require('http').createServer(app);
 
 const path = require('path');
 const { callbackify } = require('util');
-const { recieveMessage, addUser, getUser } = require('./utils/userFunctions');
+const { getUsersInRoom, recieveMessage, addUser, getUser, removeUser } = require('./utils/userFunctions');
 
 const PORT = process.env.PORT || 3001;
 
@@ -13,6 +13,8 @@ app.use(require('express').json());
 const options = { cors: { origin: '*' } };
 
 const io = require('socket.io')(server, options);
+
+
 
 io.on('connection', socket => {
     // socket.emit('notification', { message: 'connected' });
@@ -25,7 +27,7 @@ io.on('connection', socket => {
         if (error) {
             return cb(error);
         }
-
+        console.log(user)
         //join listed room;
         socket.join(user.room);
 

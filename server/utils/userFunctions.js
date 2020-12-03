@@ -1,14 +1,16 @@
 const users = [];
 
-function addUser({ id, name, room }) {
+console.log({ users });
+
+function addUser({ id, username, room }) {
     //parse input of room and name
     const roomFormatted = room.trim().toLowerCase();
-    const nameFormatted = room.trim().toLowerCase();
+    const nameFormatted = username.trim().toLowerCase();
 
     //see if theres any existing users
-    const existingUsers = users.filter((user) => user.name === nameFormatted && user.room === roomFormatted);
+    const existingUsers = users.filter((user) => user.username === nameFormatted && user.room === roomFormatted);
 
-    if (!name || !room) {
+    if (!username || !room) {
         return { error: 'Name and room are required' }
     }
 
@@ -16,13 +18,13 @@ function addUser({ id, name, room }) {
     if (existingUsers.length) {
         return { error: 'This user already exists.' };
     }
-
+    console.log({ room }, { roomFormatted })
     // if the user doesnt yet exist, push to user array.
-    const newUser = { id, name, room };
+    const user = { id, username, room };
 
-    users.push(newUser);
+    users.push(user);
 
-    return { newUser };
+    return { user };
 }
 
 function removeUser(id) {
