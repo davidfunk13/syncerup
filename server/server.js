@@ -44,7 +44,7 @@ io.on('connection', socket => {
 
     socket.on('userSendMessage', ({ message }, cb) => {
         //send a users message to everyone in the room
-        let user = getUser(socket.id);
+        let user = getUser(socket.id)[0];
 
         console.log({ message, user });
 
