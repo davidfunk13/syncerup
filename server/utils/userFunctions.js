@@ -1,7 +1,5 @@
 const users = [];
 
-console.log({ users });
-
 function addUser({ id, username, room }) {
     //parse input of room and name
     const roomFormatted = room.trim().toLowerCase();
@@ -18,7 +16,7 @@ function addUser({ id, username, room }) {
     if (existingUsers.length) {
         return { error: 'This user already exists.' };
     }
-    console.log({ room }, { roomFormatted })
+
     // if the user doesnt yet exist, push to user array.
     const user = { id, username, room };
 

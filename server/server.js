@@ -27,18 +27,19 @@ io.on('connection', socket => {
         if (error) {
             return cb(error);
         }
+
         console.log(user)
         //join listed room;
         socket.join(user.room);
 
         //send admin message to user;
-        socket.emit('serverMessage', { user: 'server', message: `Welcome to room ${user.room}, ${user.username}.` });
+        socket.emit('serverMessage', { type: 'serverMessage', user: 'server', message: `Welcome to room ${user.room}, ${user.username}.` });
 
         // send message to everyone else in the room except user
-        socket.broadcast.to(user.room).emit('serverMessage', { user: 'server', message: `${user.username} has joined the room.` });
+        socket.broadcast.to(user.room).emit('serverMessage', { type: 'serverMessage', user: 'server', message: `${user.username} has joined the room.` });
 
         // send to everyone in the room including user;
-        io.to(user.room).emit('roomInfo', { room: user.room, users: getUsersInRoom(user.room) });
+        io.to(user.room).emit('roomInfo', { type: 'roomInfo', room: user.room, users: getUsersInRoom(user.room) });
 
         cb();
     });
@@ -46,8 +47,8 @@ io.on('connection', socket => {
     socket.on('userSendMessage', (message, cb) => {
         //send a users message to everyone in the room
         const user = getUser(socket.id);
-
-        io.to(user.room).emit('message', { sentBy: user.name, message: message });
+        console.log({ message })
+        io.to(user.room).emit('broadcastMessage', { type: 'broadcastMessage', user: user.name, message: message });
 
         cb();
     });

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import IJoinProps from './Join.Types';
 import { useHistory } from 'react-router-dom';
 
@@ -14,6 +14,7 @@ const Join = ({ }: IJoinProps) => {
         event.preventDefault();
 
         localStorage.setItem('user', JSON.stringify({ username, room }));
+
         history.push('/chat');
     };
 
