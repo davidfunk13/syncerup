@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import IJoinProps from './Join.Types';
 import { useHistory } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import './Join.css';
+const uuid = uuidv4();
 
 const Join = ({ }: IJoinProps) => {
     const [username, setUsername] = useState<string>('');
@@ -13,7 +15,7 @@ const Join = ({ }: IJoinProps) => {
     function submitJoinForm(event: any): void {
         event.preventDefault();
 
-        localStorage.setItem('user', JSON.stringify({ username, room }));
+        localStorage.setItem('user', JSON.stringify({ username, room, uuid }));
 
         history.push('/chat');
     };

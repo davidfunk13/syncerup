@@ -9,7 +9,7 @@ import Input from '../../components/Input/Input.Component';
 
 const socket = io();
 
-const initialUserState: User = { username: undefined, room: undefined };
+const initialUserState: User = { username: undefined, room: undefined, uuid: undefined };
 
 const Chat = ({ }: IChatProps) => {
     const [user, setUser] = useState<User>(initialUserState);
@@ -26,7 +26,7 @@ const Chat = ({ }: IChatProps) => {
     function sendMessage(event: { preventDefault: () => void; }) {
         event.preventDefault();
 
-        socket.emit('userSendMessage', message, () => setMessage(''));
+        socket.emit('userSendMessage', { message, user }, () => setMessage(''));
     }
 
     useEffect(() => {
@@ -40,8 +40,9 @@ const Chat = ({ }: IChatProps) => {
         const userStorage: User = checkLocalStorage('user');
 
         if (userStorage) {
-            if (userStorage.username && userStorage.room) {
+            if (userStorage.username && userStorage.room && userStorage.uuid) {
                 setUser(userStorage);
+                console.log({ userStorage })
                 return joinRoom(socket, userStorage)
             }
         }
@@ -54,7 +55,10 @@ const Chat = ({ }: IChatProps) => {
             setUser(initialUserState);
             socket.off('notification');
             socket.off('serverMessage');
+            socket.off('userSendMessage');
+            socket.off('broadcastMessage');
             socket.off('roomInfo');
+
         };
 
     }, []);

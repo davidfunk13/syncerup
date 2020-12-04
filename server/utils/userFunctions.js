@@ -1,6 +1,6 @@
 const users = [];
 
-function addUser({ id, username, room }) {
+function addUser({ id, username, room, uuid }) {
     //parse input of room and name
     const roomFormatted = room.trim().toLowerCase();
     const nameFormatted = username.trim().toLowerCase();
@@ -18,7 +18,7 @@ function addUser({ id, username, room }) {
     }
 
     // if the user doesnt yet exist, push to user array.
-    const user = { id, username, room };
+    const user = { id, username, room, uuid };
 
     users.push(user);
 

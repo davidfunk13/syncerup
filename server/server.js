@@ -3,7 +3,7 @@ const app = require('express')();
 const server = require('http').createServer(app);
 
 const path = require('path');
-const { callbackify } = require('util');
+
 const { getUsersInRoom, recieveMessage, addUser, getUser, removeUser } = require('./utils/userFunctions');
 
 const PORT = process.env.PORT || 3001;
@@ -14,15 +14,13 @@ const options = { cors: { origin: '*' } };
 
 const io = require('socket.io')(server, options);
 
-
-
 io.on('connection', socket => {
     // socket.emit('notification', { message: 'connected' });
 
     //listen for join
-    socket.on('joinRoom', ({ username, room }, cb) => {
+    socket.on('joinRoom', ({ username, room, uuid }, cb) => {
         // add user to active users, return if err
-        const { error, user } = addUser({ id: socket.id, username, room });
+        const { error, user } = addUser({ id: socket.id, username, room, uuid });
 
         if (error) {
             return cb(error);
@@ -44,10 +42,12 @@ io.on('connection', socket => {
         cb();
     });
 
-    socket.on('userSendMessage', (message, cb) => {
+    socket.on('userSendMessage', ({ message }, cb) => {
         //send a users message to everyone in the room
-        const user = getUser(socket.id);
-        console.log({ message })
+        let user = getUser(socket.id);
+
+        console.log({ message, user });
+
         io.to(user.room).emit('broadcastMessage', { type: 'broadcastMessage', user: user.name, message: message });
 
         cb();
