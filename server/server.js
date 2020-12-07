@@ -4,63 +4,109 @@ const server = require('http').createServer(app);
 
 const path = require('path');
 
-const { getUsersInRoom, recieveMessage, addUser, getUser, removeUser } = require('./utils/userFunctions');
+const {
+    SOCKET_CONNECT,
+    USER_JOIN_ROOM,
+    SERVER_BROADCAST_USER_JOIN,
+    SERVER_BROADCAST_USER_LEAVE,
+    SERVER_BROADCAST_USER_MESSAGE,
+    SERVER_BROADCAST_ROOM_INFO,
+    USER_SEND_MESSAGE,
+    SOCKET_DISCONNECT,
+    SERVER_MESSAGE_USER_JOIN,
+} = require('./emitterTypes');
+
+const {
+    addUser,
+    getUser,
+    removeUser,
+    getUsersInRoom,
+    recieveMessage,
+} = require('./utils/userFunctions');
 
 const PORT = process.env.PORT || 3001;
 
 app.use(require('express').json());
 
-const options = { cors: { origin: '*' } };
+const options = {
+    cors: {
+        origin: '*',
+    },
+};
 
 const io = require('socket.io')(server, options);
 
-io.on('connection', socket => {
-    // socket.emit('notification', { message: 'connected' });
+io.on(SOCKET_CONNECT, socket => {
 
     //listen for join
-    socket.on('joinRoom', ({ username, room, uuid }, cb) => {
+    socket.on(USER_JOIN_ROOM, ({ username, room, uuid }, cb) => {
+
         // add user to active users, return if err
-        const { error, user } = addUser({ id: socket.id, username, room, uuid });
+        const { error, user } = addUser({
+            id: socket.id,
+            username,
+            room,
+            uuid
+        });
 
         if (error) {
             return cb(error);
         }
 
-        console.log(user)
         //join listed room;
         socket.join(user.room);
 
-        //send admin message to user;
-        socket.emit('serverMessage', { type: 'serverMessage', user: 'server', message: `Welcome to room ${user.room}, ${user.username}.` });
+        //send admin message to user on Join;
+        socket.emit(SERVER_MESSAGE_USER_JOIN, {
+            type: SERVER_MESSAGE_USER_JOIN,
+            user: 'server',
+            message: `Welcome to room ${user.room}, ${user.username}.`
+        });
 
-        // send message to everyone else in the room except user
-        socket.broadcast.to(user.room).emit('serverMessage', { type: 'serverMessage', user: 'server', message: `${user.username} has joined the room.` });
+        // send message to everyone else in the room (expect user ) saying user joined
+        socket.broadcast.to(user.room).emit(SERVER_BROADCAST_USER_JOIN, {
+            type: SERVER_BROADCAST_USER_JOIN,
+            user: 'server',
+            message: `${user.username} has joined the room.`
+        });
 
-        // send to everyone in the room including user;
-        io.to(user.room).emit('roomInfo', { type: 'roomInfo', room: user.room, users: getUsersInRoom(user.room) });
+        // send room info to everyone in the room including user;
+        io.to(user.room).emit(SERVER_BROADCAST_ROOM_INFO, {
+            type: SERVER_BROADCAST_ROOM_INFO,
+            room: user.room,
+            users: getUsersInRoom(user.room)
+        });
 
         cb();
     });
 
-    socket.on('userSendMessage', ({ message }, cb) => {
+    socket.on(USER_SEND_MESSAGE, ({ message }, cb) => {
         //send a users message to everyone in the room
         let user = getUser(socket.id)[0];
 
-        console.log({ message, user });
-
-        io.to(user.room).emit('broadcastMessage', { type: 'broadcastMessage', user: user.name, message: message });
+        io.to(user.room).emit(SERVER_BROADCAST_USER_MESSAGE, {
+            type: SERVER_BROADCAST_USER_MESSAGE,
+            user: user.name, message: message
+        });
 
         cb();
     });
 
-    socket.on('disconnect', () => {
-        console.log('disconnected', socket.id);
+    socket.on(SOCKET_DISCONNECT, () => {
         const user = removeUser(socket.id);
 
         if (user) {
-            io.to(user.room).emit('serverMessage', { user: 'server', message: `${user.name} left.` });
-            io.to(user.room).emit('roomInfo', { room: user.room, users: getUsersInRoom(user.room) });
+            io.to(user.room).emit(SERVER_BROADCAST_USER_LEAVE, {
+                user: 'server',
+                message: `${user.name} left.`
+            });
+
+            io.to(user.room).emit(SERVER_BROADCAST_ROOM_INFO, {
+                room: user.room,
+                users: getUsersInRoom(user.room)
+            });
         }
+
     })
 });
 

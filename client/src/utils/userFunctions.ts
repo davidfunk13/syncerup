@@ -1,4 +1,5 @@
 import { User } from "../App.Types";
+import emitterTypes from './emitterTypes';
 
 export function joinRoom(socket: any, user: User): void {
     if (!user) {
@@ -7,7 +8,7 @@ export function joinRoom(socket: any, user: User): void {
 
     const { username, room, uuid } = user;
 
-    socket.emit('joinRoom', { username, room, uuid }, (error: any) => {
+    socket.emit(emitterTypes.USER_JOIN_ROOM, { username, room, uuid }, (error: any) => {
         console.log('joined room');
 
         if (error) {

@@ -37,8 +37,5 @@ function getUsersInRoom(room) {
     return users.filter(user => user.room === room);
 }
 
-function recieveMessage(socket, message) {
-    socket.emit('notification', { message: 'message recieved', data: message })
-}
 
-module.exports = { addUser, removeUser, getUser, getUsersInRoom, recieveMessage };
+module.exports = { addUser, removeUser, getUser, getUsersInRoom };
