@@ -4,10 +4,12 @@ import { useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import './Join.css';
+
 const uuid = uuidv4();
 
 const Join = ({ }: IJoinProps) => {
     const [username, setUsername] = useState<string>('');
+
     const [room, setRoom] = useState<string>('');
 
     const history = useHistory();

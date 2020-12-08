@@ -6,38 +6,50 @@ import { useHistory } from 'react-router-dom';
 import { User } from '../../App.Types';
 import checkLocalStorage from '../../utils/checkUserStorage';
 import Input from '../../components/Input/Input.Component';
+import Messages from '../../components/Messages/Messages.Component';
 import emitterTypes from '../../utils/emitterTypes';
-
-const { SERVER_BROADCAST_ROOM_INFO, USER_SEND_MESSAGE } = emitterTypes;
 
 const socket = io();
 
-const initialUserState: User = { username: undefined, room: undefined, uuid: undefined };
+const initialUserState: User = {
+    username: undefined,
+    room: undefined,
+    uuid: undefined,
+};
 
 const Chat = ({ }: IChatProps) => {
     const [user, setUser] = useState<User>(initialUserState);
 
     const [message, setMessage] = useState<string>('');
 
+    const [messages, setMessages] = useState<{ type: string, username: string, message: string }[]>([]);
+
     const history = useHistory();
 
     function newSession() {
         localStorage.removeItem('user');
+
         history.push('/');
     }
 
     function sendMessage(event: { preventDefault: () => void; }) {
         event.preventDefault();
-        console.log(user)
-        socket.emit(USER_SEND_MESSAGE,
-            { message, user }, () => setMessage(''));
+
+        socket.emit(emitterTypes.USER_SEND_MESSAGE, { message, user }, () => setMessage(''));
     }
 
     useEffect(() => {
         console.log('mount');
 
-        socket.on(SERVER_BROADCAST_ROOM_INFO,
+        socket.on(emitterTypes.SERVER_BROADCAST_ROOM_INFO,
             ({ type, room, users }: any) => console.log({ type, room, users })
+        );
+
+        socket.on(emitterTypes.SERVER_BROADCAST_USER_MESSAGE,
+            ({ type, username, message }: any) => {
+                const item = { type, username, message };
+                setMessages(messages => [...messages, item]);
+            }
         );
 
         const userStorage: User = checkLocalStorage('user');
@@ -45,7 +57,7 @@ const Chat = ({ }: IChatProps) => {
         if (userStorage) {
             if (userStorage.username && userStorage.room && userStorage.uuid) {
                 setUser(userStorage);
-                console.log({ userStorage })
+
                 return joinRoom(socket, userStorage)
             }
         }
@@ -54,9 +66,10 @@ const Chat = ({ }: IChatProps) => {
 
         return () => {
             console.log('cleanup');
-            socket.off(USER_SEND_MESSAGE);
-            socket.off(SERVER_BROADCAST_ROOM_INFO);
-
+            socket.off(emitterTypes.USER_SEND_MESSAGE);
+            socket.off(emitterTypes.SERVER_BROADCAST_USER_MESSAGE);
+            socket.off(emitterTypes.SERVER_BROADCAST_ROOM_INFO);
+            socket.emit(emitterTypes.SOCKET_DISCONNECT);
             setUser(initialUserState);
         };
 
@@ -70,6 +83,7 @@ const Chat = ({ }: IChatProps) => {
                 <p>Username: {user.username}</p>
                 <p>Room: {user.room}</p>
             </div>
+            <Messages messages={messages} />
             <Input message={message} sendMessage={sendMessage} setMessage={setMessage} />
             {/* {user ? <ChatBox /> : <p>Loading...</p> } */}
         </div>

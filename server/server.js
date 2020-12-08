@@ -21,7 +21,6 @@ const {
     getUser,
     removeUser,
     getUsersInRoom,
-    recieveMessage,
 } = require('./utils/userFunctions');
 
 const PORT = process.env.PORT || 3001;
@@ -80,13 +79,15 @@ io.on(SOCKET_CONNECT, socket => {
         cb();
     });
 
-    socket.on(USER_SEND_MESSAGE, ({ message }, cb) => {
+    socket.on(USER_SEND_MESSAGE, ({ message, user }, cb) => {
+        console.log(user);
+        // let user = getUser(socket.id)[0];
         //send a users message to everyone in the room
-        let user = getUser(socket.id)[0];
 
         io.to(user.room).emit(SERVER_BROADCAST_USER_MESSAGE, {
             type: SERVER_BROADCAST_USER_MESSAGE,
-            user: user.name, message: message
+            username: user.username,
+            message: message
         });
 
         cb();
@@ -98,7 +99,7 @@ io.on(SOCKET_CONNECT, socket => {
         if (user) {
             io.to(user.room).emit(SERVER_BROADCAST_USER_LEAVE, {
                 user: 'server',
-                message: `${user.name} left.`
+                message: `${user.username} left.`
             });
 
             io.to(user.room).emit(SERVER_BROADCAST_ROOM_INFO, {
