@@ -29,6 +29,8 @@ const Chat = ({ }: IChatProps) => {
     function newSession() {
         localStorage.removeItem('user');
 
+        socket.disconnect();
+
         history.push('/');
     }
 
@@ -43,6 +45,14 @@ const Chat = ({ }: IChatProps) => {
 
         socket.on(emitterTypes.SERVER_BROADCAST_ROOM_INFO,
             ({ type, room, users }: any) => console.log({ type, room, users })
+        );
+
+        socket.on(emitterTypes.SERVER_BROADCAST_USER_JOIN,
+            ({ type, username, message }: any) => setMessages(messages => [...messages, { type, username, message }])
+        );
+
+        socket.on(emitterTypes.SERVER_BROADCAST_USER_LEAVE,
+            ({ type, username, message }: any) => setMessages(messages => [...messages, { type, username, message }])
         );
 
         socket.on(emitterTypes.SERVER_BROADCAST_USER_MESSAGE,
@@ -69,7 +79,7 @@ const Chat = ({ }: IChatProps) => {
             socket.off(emitterTypes.USER_SEND_MESSAGE);
             socket.off(emitterTypes.SERVER_BROADCAST_USER_MESSAGE);
             socket.off(emitterTypes.SERVER_BROADCAST_ROOM_INFO);
-            socket.emit(emitterTypes.SOCKET_DISCONNECT);
+            socket.disconnect();
             setUser(initialUserState);
         };
 

@@ -39,7 +39,7 @@ io.on(SOCKET_CONNECT, socket => {
 
     //listen for join
     socket.on(USER_JOIN_ROOM, ({ username, room, uuid }, cb) => {
-
+        console.log({ room });
         // add user to active users, return if err
         const { error, user } = addUser({
             id: socket.id,
@@ -58,21 +58,21 @@ io.on(SOCKET_CONNECT, socket => {
         //send admin message to user on Join;
         socket.emit(SERVER_MESSAGE_USER_JOIN, {
             type: SERVER_MESSAGE_USER_JOIN,
-            user: 'server',
+            username: 'Server',
             message: `Welcome to room ${user.room}, ${user.username}.`
         });
 
         // send message to everyone else in the room (expect user ) saying user joined
         socket.broadcast.to(user.room).emit(SERVER_BROADCAST_USER_JOIN, {
             type: SERVER_BROADCAST_USER_JOIN,
-            user: 'server',
+            username: 'Server',
             message: `${user.username} has joined the room.`
         });
 
         // send room info to everyone in the room including user;
         io.to(user.room).emit(SERVER_BROADCAST_ROOM_INFO, {
             type: SERVER_BROADCAST_ROOM_INFO,
-            room: user.room,
+            username: user.room,
             users: getUsersInRoom(user.room)
         });
 
@@ -93,22 +93,27 @@ io.on(SOCKET_CONNECT, socket => {
         cb();
     });
 
-    socket.on(SOCKET_DISCONNECT, () => {
-        const user = removeUser(socket.id);
+    socket.on(SOCKET_DISCONNECT, cb => {
+        console.log('Socket Disconnect' + ' ' + socket.id);
 
-        if (user) {
-            io.to(user.room).emit(SERVER_BROADCAST_USER_LEAVE, {
-                user: 'server',
-                message: `${user.username} left.`
-            });
+        const user = getUser(socket.id)[0];
 
-            io.to(user.room).emit(SERVER_BROADCAST_ROOM_INFO, {
-                room: user.room,
-                users: getUsersInRoom(user.room)
-            });
-        }
+        console.log({ disconnectUser: user })
 
-    })
+        io.to(user.room).emit(SERVER_BROADCAST_USER_LEAVE, {
+            type: SERVER_BROADCAST_USER_LEAVE,
+            username: 'Server',
+            message: `${user.username} left.`
+        });
+
+        io.to(user.room).emit(SERVER_BROADCAST_ROOM_INFO, {
+            type: SERVER_BROADCAST_ROOM_INFO,
+            room: user.room,
+            users: getUsersInRoom(user.room)
+        });
+
+        removeUser(socket.id);
+    });
 });
 
 if (process.env.NODE_ENV === 'production') {

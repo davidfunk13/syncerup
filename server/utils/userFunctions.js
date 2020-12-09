@@ -1,7 +1,6 @@
 const users = [];
-
+console.log(users)
 function addUser({ id, username, room, uuid }) {
-
     const user = { id, username, room, uuid };
     //parse input of room and name
     const roomFormatted = room.trim().toLowerCase();
@@ -10,6 +9,8 @@ function addUser({ id, username, room, uuid }) {
     //see if theres any existing users
     const existingUsers = users.filter((user) => user.username === username && user.room === room && user.uuid === uuid);
 
+    console.log({ existingUsers })
+
     if (!username || !room) {
         return { error: 'Name and room are required' }
     }
@@ -17,20 +18,28 @@ function addUser({ id, username, room, uuid }) {
     //if there are, reject, and return and error message.
     if (existingUsers.length) {
         //if uuid is the same, 
-        console.log({ users }, { user });
-
-        return { user, error: 'This user already exists.' };
+        removeUser(existingUsers[0].id);
     }
 
 
+    console.log(`adding user ${username} with socket id ${id} and uuid of ${uuid}`);
     // if the user doesnt yet exist, push to user array.
     users.push(user);
 
     return { user };
 }
 
-function removeUser(id) {
-    return users.filter(user => user.id !== id);
+function removeUser(id, notifyUser) {
+    const userIndex = users.findIndex(user => user.id === id);
+
+    if (userIndex !== -1) {
+        const newUserArr = users.splice(userIndex, 1);
+
+        console.log(`removing user ${id}, new user array:`, newUserArr);
+        return newUserArr;
+    }
+
+    console.log('not successfull or doesnt exist.');
 }
 
 function getUser(id) {
