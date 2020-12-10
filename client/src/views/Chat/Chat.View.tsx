@@ -14,7 +14,6 @@ const socket = io();
 const initialUserState: User = {
     username: undefined,
     room: undefined,
-    uuid: undefined,
 };
 
 const Chat = ({ }: IChatProps) => {
@@ -63,7 +62,7 @@ const Chat = ({ }: IChatProps) => {
         const userStorage: User = checkLocalStorage('user');
 
         if (userStorage) {
-            if (userStorage.username && userStorage.room && userStorage.uuid) {
+            if (userStorage.username && userStorage.room) {
                 setUser(userStorage);
 
                 return joinRoom(socket, userStorage)

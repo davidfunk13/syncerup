@@ -1,6 +1,7 @@
 .messages-container {
-    height: 50vh;
-    width: 40vw;
-    color:white;
-    background-color: blueviolet;
+    width: 70vw;
+    height: 55vh;
+    color:black;
+    background-color: white;
+    overflow: auto;
 }

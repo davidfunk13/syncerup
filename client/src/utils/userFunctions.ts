@@ -6,9 +6,9 @@ export function joinRoom(socket: any, user: User): void {
         return;
     }
 
-    const { username, room, uuid } = user;
+    const { username, room } = user;
 
-    socket.emit(emitterTypes.USER_JOIN_ROOM, { username, room, uuid }, (error: any) => {
+    socket.emit(emitterTypes.USER_JOIN_ROOM, { username, room }, (error: any) => {
         console.log('joined room');
 
         if (error) {
