@@ -100,17 +100,19 @@ io.on(SOCKET_CONNECT, socket => {
 
         console.log({ disconnectUser: user })
 
-        io.to(user.room).emit(SERVER_BROADCAST_USER_LEAVE, {
-            type: SERVER_BROADCAST_USER_LEAVE,
-            username: 'Server',
-            message: `${user.username} left.`
-        });
+        if (user) {
+            io.to(user.room).emit(SERVER_BROADCAST_USER_LEAVE, {
+                type: SERVER_BROADCAST_USER_LEAVE,
+                username: 'Server',
+                message: `${user.username} left.`
+            });
 
-        io.to(user.room).emit(SERVER_BROADCAST_ROOM_INFO, {
-            type: SERVER_BROADCAST_ROOM_INFO,
-            room: user.room,
-            users: getUsersInRoom(user.room)
-        });
+            io.to(user.room).emit(SERVER_BROADCAST_ROOM_INFO, {
+                type: SERVER_BROADCAST_ROOM_INFO,
+                room: user.room,
+                users: getUsersInRoom(user.room)
+            });
+        }
 
         removeUser(socket.id);
     });

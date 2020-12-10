@@ -1,5 +1,5 @@
 const users = [];
-console.log(users)
+
 function addUser({ id, username, room, uuid }) {
     const user = { id, username, room, uuid };
     //parse input of room and name
@@ -7,7 +7,7 @@ function addUser({ id, username, room, uuid }) {
     const nameFormatted = username.trim().toLowerCase();
 
     //see if theres any existing users
-    const existingUsers = users.filter((user) => user.username === username && user.room === room && user.uuid === uuid);
+    const existingUsers = users.filter((user) => user.username === username && user.room === room);
 
     console.log({ existingUsers })
 
