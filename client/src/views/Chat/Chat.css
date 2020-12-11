@@ -1,3 +1,28 @@
-.chat-info{
+.chat-info,
+.room-info {
     width: 100%;
+}
+
+.room-info {
+    margin-left: 20%;
+}
+
+.chat-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.chat-container > h1 {
+    margin-bottom: 0;
+}
+
+.chat-container > button {
+    width: 80%;
+    background-color: red;
+    color: white;
+    border-style: unset;
+    border: 1px solid white;
+    height: 5vh;
 }

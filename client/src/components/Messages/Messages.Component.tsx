@@ -1,7 +1,9 @@
-import React, { createRef, useEffect } from 'react';
+import React, { createRef, Fragment, useEffect } from 'react';
 import IMessagesProps from './Messages.Types';
 
 import './Messages.css';
+import Message from '../Message/Message.Component';
+import { UserStorage } from '../../App.Types';
 
 const Messages = ({ messages }: IMessagesProps) => {
     const bottomRef = createRef<any>();
@@ -10,6 +12,8 @@ const Messages = ({ messages }: IMessagesProps) => {
         bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
 
+    const user: UserStorage = JSON.parse(localStorage.getItem('user') as unknown as string);
+
     useEffect(() => {
         scrollToBottom();
     }, [bottomRef]);
@@ -17,7 +21,9 @@ const Messages = ({ messages }: IMessagesProps) => {
     return (
         <div className={'messages-container'}>
             {messages.map(message => {
-                return <p>{message.username}: {message.message}</p>
+                return (
+                    <Message username={user.username} message={message} />
+                )
             })}
             <div ref={bottomRef} />
         </div>

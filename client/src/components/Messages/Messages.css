@@ -1,7 +1,12 @@
 .messages-container {
+    padding: 5%;
     width: 70vw;
-    height: 55vh;
-    color:black;
+    height: 45vh;
+    color: black;
     background-color: white;
     overflow: auto;
+}
+
+.message-container {
+    width: 100%;
 }

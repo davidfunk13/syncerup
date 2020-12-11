@@ -7,6 +7,7 @@ import Chat from './views/Chat/Chat.View';
 import Link from './views/Link/Link.View';
 
 import './App.css';
+import './utils.css';
 
 function App() {
   return (

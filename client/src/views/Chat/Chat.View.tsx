@@ -9,12 +9,15 @@ import Input from '../../components/Input/Input.Component';
 import Messages from '../../components/Messages/Messages.Component';
 import emitterTypes from '../../utils/emitterTypes';
 
+import './Chat.css'
+
 const socket = io();
 
 const initialUserState: User = {
     username: undefined,
     room: undefined,
 };
+
 
 const Chat = ({ }: IChatProps) => {
     const [user, setUser] = useState<User>(initialUserState);
@@ -83,16 +86,19 @@ const Chat = ({ }: IChatProps) => {
     }, []);
 
     return (
-        <div className="join-container">
-            <button onClick={newSession}>New Session</button>
+        <div className="chat-container">
             <h1>Chat</h1>
             <div className="room-info">
                 <p>Username: {user.username}</p>
                 <p>Room: {user.room}</p>
             </div>
             <Messages messages={messages} />
-            <Input message={message} sendMessage={sendMessage} setMessage={setMessage} />
-            {/* {user ? <ChatBox /> : <p>Loading...</p> } */}
+            <Input
+                message={message}
+                sendMessage={sendMessage}
+                setMessage={setMessage}
+            />
+            <button onClick={newSession}>New Session</button>
         </div>
     );
 };
